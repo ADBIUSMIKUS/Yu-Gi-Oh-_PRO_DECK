@@ -1,0 +1,31 @@
+<a class="back" [routerLink]="backLink()">← Volver a la colección</a>
+@switch (state()) {
+  @case ('loading') { <div class="status" aria-live="polite">Cargando carta...</div> }
+  @case ('error') { <div class="status error" role="alert">No se pudo consultar la carta. Comprueba tu conexión y vuelve a intentarlo.</div> }
+  @case ('empty') { <div class="status">No se encontró esta carta.</div> }
+  @case ('success') {
+    @if (card(); as current) {
+      <article class="detail">
+        <div class="art">@if (current.card_images?.[0]?.image_url; as imageUrl) { <img [src]="imageUrl" [alt]="'Carta ' + current.name" /> } @else { <span>Imagen no disponible</span> }</div>
+        <div class="info">
+          <span class="kicker">FICHA DE CARTA · #{{ current.id }}</span>
+          <h1>{{ current.name }}</h1>
+          <p class="type">{{ current.type }}</p>
+          <div class="facts">
+            @if (current.attribute) { <div><span>Atributo</span><strong>{{ current.attribute }}</strong></div> }
+            @if (current.level != null && current.level > 0) { <div><span>Nivel</span><strong>{{ current.level }}</strong></div> }
+            @if (current.atk != null) { <div><span>ATK</span><strong>{{ current.atk }}</strong></div> }
+            @if (current.def != null) { <div><span>DEF</span><strong>{{ current.def }}</strong></div> }
+            @if (current.archetype) { <div><span>Arquetipo</span><strong>{{ current.archetype }}</strong></div> }
+          </div>
+          <section class="description"><h2>Descripción</h2><p>{{ current.desc }}</p></section>
+        </div>
+      </article>
+      <section class="printings"><div class="section-line"><div><span class="kicker">REGISTRO DE IMPRESIONES</span><h2>Expansiones y ediciones</h2></div><span>{{ current.card_sets?.length ?? 0 }} impresiones</span></div>
+        @if (current.card_sets?.length) {
+          <div class="table-wrap"><table><thead><tr><th>EXPANSIÓN</th><th>CÓDIGO</th><th>RAREZA</th><th>PRECIO API (USD)</th></tr></thead><tbody>@for (printing of current.card_sets; track $index) { <tr><td>{{ printing.set_name }}</td><td>{{ printing.set_code }}</td><td>{{ printing.set_rarity || 'No indicada' }}</td><td>{{ printing.set_price === '' ? 'No indicado' : '$' + printing.set_price }}</td></tr> }</tbody></table></div>
+        } @else { <p class="status">La API no proporciona impresiones para esta carta.</p> }
+      </section>
+    }
+  }
+}

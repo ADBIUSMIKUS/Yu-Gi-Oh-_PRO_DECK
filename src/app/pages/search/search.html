@@ -1,0 +1,22 @@
+<section class="page-head">
+  <span class="kicker">ARCHIVO DE DUELOS · 01</span>
+  <h1>Busca tu próxima <em>carta.</em></h1>
+  <p>Explora el catálogo de Yu-Gi-Oh! por nombre. Cada resultado llega directamente de YGOPRODeck.</p>
+</section>
+<section class="search-panel" aria-label="Buscador de cartas">
+  <label for="card-query">NOMBRE DE LA CARTA</label>
+  <div class="input-wrap"><span aria-hidden="true">⌕</span><input id="card-query" type="search" [formControl]="query" placeholder="Blue-Eyes, Dark Magician, Kuriboh…" autocomplete="off" /></div>
+  <p>Escribe un nombre completo o parcial. La búsqueda comienza tras una breve pausa.</p>
+</section>
+<section class="results" aria-live="polite">
+  @switch (state()) {
+    @case ('idle') { <div class="status">Escribe el nombre de una carta para comenzar.</div> }
+    @case ('loading') { <div class="status"><span class="loader" aria-hidden="true"></span> Cargando cartas...</div> }
+    @case ('empty') { <div class="status">No se encontraron cartas para esta búsqueda.</div> }
+    @case ('error') { <div class="status error" role="alert">{{ errorMessage() }}</div> }
+    @case ('success') {
+      <div class="section-line"><h2>Resultados</h2><span>{{ cards().length }} cartas</span></div>
+      <div class="card-grid">@for (card of cards(); track card.id) { <app-card [card]="card" (selected)="openCard($event)" /> }</div>
+    }
+  }
+</section>

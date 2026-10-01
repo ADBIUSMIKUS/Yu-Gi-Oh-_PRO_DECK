@@ -1,0 +1,19 @@
+<section class="page-head">
+  <span class="kicker">ARCHIVO DE DUELOS · 02</span>
+  <h1>Blue-Eyes <em>Collection.</em></h1>
+  <p>Un archivo vivo del arquetipo Blue-Eyes. Las cartas y sus expansiones se obtienen de YGOPRODeck.</p>
+</section>
+@switch (state()) {
+  @case ('loading') { <div class="status" aria-live="polite"><span class="loader" aria-hidden="true"></span> Cargando cartas...</div> }
+  @case ('error') { <div class="status error" role="alert">No se pudo cargar la colección. <button type="button" (click)="load()">Reintentar</button></div> }
+  @case ('empty') { <div class="status">La API no devolvió cartas para Blue-Eyes.</div> }
+  @case ('success') {
+    <div class="toolbar">
+      <div><span class="tiny-label">COLECCIÓN</span><strong>{{ visibleCards().length }} <small>de {{ cards().length }} cartas</small></strong></div>
+      <div class="select-group"><label for="expansion">FILTRAR POR EXPANSIÓN</label><select id="expansion" [value]="selectedExpansion()" (change)="chooseExpansion($event)"><option value="">Todas las expansiones</option>@for (expansion of expansions(); track expansion) { <option [value]="expansion">{{ expansion }}</option> }</select></div>
+    </div>
+    @if (visibleCards().length) {
+      <div class="card-grid">@for (card of visibleCards(); track card.id) { <app-card [card]="card" (selected)="openCard($event)" /> }</div>
+    } @else { <div class="status">Ninguna carta tiene una impresión en la expansión seleccionada.</div> }
+  }
+}

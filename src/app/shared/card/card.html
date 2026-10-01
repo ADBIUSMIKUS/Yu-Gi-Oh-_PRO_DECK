@@ -1,0 +1,20 @@
+<button class="card" type="button" (click)="selected.emit(card())" [attr.aria-label]="'Ver detalles de ' + card().name">
+  <div class="card-art">
+    @if (card().card_images?.[0]?.image_url_small; as imageUrl) {
+      <img [src]="imageUrl" [alt]="'Carta ' + card().name" loading="lazy" />
+    } @else {
+      <span class="no-image">Imagen no disponible</span>
+    }
+  </div>
+  <div class="card-copy">
+    <span class="eyebrow">{{ card().type }}</span>
+    <h3>{{ card().name }}</h3>
+    <div class="facts">
+      @if (card().attribute) { <span>{{ card().attribute }}</span> }
+      @if (card().level != null && card().level! > 0) { <span>Nivel {{ card().level }}</span> }
+      @if (card().atk != null) { <span>ATK {{ card().atk }}</span> }
+      @if (card().def != null) { <span>DEF {{ card().def }}</span> }
+    </div>
+    <span class="card-action">Explorar carta <span aria-hidden="true">↗</span></span>
+  </div>
+</button>
